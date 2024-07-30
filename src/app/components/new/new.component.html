@@ -1,4 +1,4 @@
-<form [formGroup]="form">
+<form [formGroup]="form" (ngSubmit)="createData()">
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -26,7 +26,7 @@
                   </mat-form-field>
             </div>
             <div class="col-12">
-                <button (click)="createData()" mat-raised-button color="primary" type="submit">Save Data</button>
+                <button [disabled]="form.invalid " mat-raised-button color="primary" type="submit">Save Data</button>
             </div>
         </div>
     </div>

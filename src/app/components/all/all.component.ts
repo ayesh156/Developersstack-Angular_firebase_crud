@@ -1,6 +1,7 @@
 // src/app/all/all.component.ts
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { PostService } from '../../services/post.service';
 
 @Component({
   selector: 'app-all',
@@ -16,10 +17,10 @@ export class AllComponent implements OnInit {
   totalPages: number = 1;
   pages: number[] = [];
 
-  constructor(private http: HttpClient) { }
+  constructor(private postService:PostService) { }
 
   ngOnInit(): void {
-    this.http.get<any>('https://jsonplaceholder.typicode.com/posts').subscribe(response => {
+    this.postService.findAll().subscribe(response => {
       this.list = response;
       this.totalPages = Math.ceil(this.list.length / this.itemsPerPage);
       this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);

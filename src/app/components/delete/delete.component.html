@@ -1,1 +1,46 @@
-<p>delete works!</p>
+<div class="container mt-4">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>#Id</th>
+          <th>User_Id</th>
+          <th>Title</th>
+          <th>Body</th>
+          <th>Option</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let tempData of paginatedList">
+          <td>{{ tempData.id }}</td>
+          <td>{{ tempData.userId }}</td>
+          <td>{{ tempData.title }}</td>
+          <td>{{ tempData.body }}</td>
+          <td><button mat-raised-button color="warn" (click)="delete(tempData.id)">
+            <mat-icon>delete</mat-icon>
+            DeleteMe</button></td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <!-- Pagination Controls -->
+    <nav aria-label="Page navigation" class="pagination-bar">
+      <ul class="pagination">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <a class="page-link" href="#" (click)="prevPage($event)">Previous</a>
+        </li>
+        <li
+          *ngFor="let page of pages"
+          class="page-item"
+          [class.active]="currentPage === page"
+        >
+          <a class="page-link" href="#" (click)="goToPage(page, $event)">{{
+            page
+          }}</a>
+        </li>
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <a class="page-link" href="#" (click)="nextPage($event)">Next</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  
