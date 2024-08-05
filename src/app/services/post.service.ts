@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { AngularFirestore, DocumentChangeAction } from '@angular/fire/compat/firestore';
+import { map, Observable } from 'rxjs';
+import Post from '../dto/Post';
 
 @Injectable({
   providedIn: 'root'
@@ -9,28 +11,57 @@ export class PostService {
 
   baseUrl = 'https://jsonplaceholder.typicode.com/';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private fireStoreService: AngularFirestore) { }
 
-  findAll():Observable<any>{
-    return this.http.get<any>(this.baseUrl+'posts');
+ 
+  findAllDataFireStore() {
+    return this.fireStoreService.collection('post-data').snapshotChanges().pipe(
+      map((actions: DocumentChangeAction<any>[]) => 
+        actions.map(a => {
+          const data = a.payload.doc.data();
+          const id = a.payload.doc.id;
+          return { id, ...data };
+        })
+      )
+    );
   }
 
-  delete(id:any):Observable<any>{
-    return this.http.delete<any>(this.baseUrl+`posts/${id}`);
+  
+  deleteDataFireStore(id: any) {
+    return this.fireStoreService.collection('post-data').doc(id).delete();
   }
 
-  find(id:any):Observable<any>{
-    return this.http.get<any>(this.baseUrl+`posts?id=${id}`);
+
+
+  findDataFireStore(id: any) {
+    return this.fireStoreService.collection('post-data').doc(id).valueChanges();
   }
 
-  create(id:any, userId:any, title:any, body:any):Observable<any>{
-    return this.http.post<any>(this.baseUrl+'posts',{
-      id, userId, title, body
+  
+
+  createDataFireStore(post: Post) {
+    return new Promise<any>((resolve, reject) => {
+      this.fireStoreService.collection('post-data')
+        .add(post.toObject()) // Convert to plain object
+        .then(response => {
+          console.log(response);
+          resolve(response);
+        }, error => {
+          console.log(error);
+          reject(error);
+        });
     });
   }
-  update(id:any, userId:any, title:any, body:any):Observable<any>{
-    return this.http.put<any>(this.baseUrl+`posts/${id}`,{
-      id, userId, title, body
-    });
+
+
+  updateDataFireStore(post: Post) {
+    return this.fireStoreService.collection('post-data')
+      .doc(post.id)
+      .update({
+        userId:post.userId,
+        title:post.title,
+        body:post.body
+      });
   }
+
 }

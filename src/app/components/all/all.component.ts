@@ -20,7 +20,7 @@ export class AllComponent implements OnInit {
   constructor(private postService:PostService) { }
 
   ngOnInit(): void {
-    this.postService.findAll().subscribe(response => {
+    this.postService.findAllDataFireStore().subscribe(response => {
       this.list = response;
       this.totalPages = Math.ceil(this.list.length / this.itemsPerPage);
       this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);

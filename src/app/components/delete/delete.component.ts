@@ -20,7 +20,7 @@ export class DeleteComponent {
   constructor(private postService:PostService, private _snackBar: SnackBarService) {}
 
   ngOnInit(): void {
-    this.postService.findAll().subscribe(response => {
+    this.postService.findAllDataFireStore().subscribe(response => {
       this.list = response;
       this.totalPages = Math.ceil(this.list.length / this.itemsPerPage);
       this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
@@ -58,26 +58,11 @@ export class DeleteComponent {
     }
   }
 
-  delete(id: any) {
+  delete(id: string) {
     if (confirm(`Are you sure you want to delete item with ID ${id}?`)) {
-      this.postService.delete(id)
-        .subscribe(response => {
-          if (response) {
-            this._snackBar.trigger('Deleted', 'Close');
-  
-            // Remove the item from the list
-            this.list = this.list.filter(item => item.id !== id);
-  
-            // Update pagination after deletion
-            this.totalPages = Math.ceil(this.list.length / this.itemsPerPage);
-            this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
-            if (this.currentPage > this.totalPages) {
-              this.currentPage = this.totalPages;
-            }
-            this.updatePagination();
-          }
-        });
+      this.postService.deleteDataFireStore(id);
     }
   }
+  
 
 }

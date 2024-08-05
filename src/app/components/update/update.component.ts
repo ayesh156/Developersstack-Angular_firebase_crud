@@ -23,23 +23,28 @@ export class UpdateComponent {
     body: new FormControl('',Validators.required)
   });
 
+  // updateData(){
+  //   this.postService.update(
+  //     this.form.get('id')?.value,
+  //     this.form.get('userId')?.value,
+  //     this.form.get('title')?.value,
+  //     this.form.get('body')?.value
+  //   )
+  //   .subscribe(response => {
+  //     if(response){
+  //       this._snackBar.trigger('Updated','close')
+  //       console.log(response);
+  //     }
+  //   });
+  // }
+
   updateData(){
-    this.postService.update(
-      this.form.get('id')?.value,
-      this.form.get('userId')?.value,
-      this.form.get('title')?.value,
-      this.form.get('body')?.value
-    )
-    .subscribe(response => {
-      if(response){
-        this._snackBar.trigger('Updated','close')
-        console.log(response);
-      }
-    });
+  
   }
+  
 
   loadData(){
-    this.postService.find(this.searchId).subscribe(response => {
+    this.postService.findAllDataFireStore().subscribe(response => {
       this.form.patchValue({
         id:response[0].id,
         userId:response[0].userId,

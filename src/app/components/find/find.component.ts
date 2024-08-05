@@ -15,10 +15,20 @@ export class FindComponent {
 
   constructor(private postService:PostService) { }
 
-  loadData(){
-    this.postService.find(this.searchId).subscribe(response => {
-      this.list = response;
-    });
+  loadData() {
+    if (this.searchId) {
+      this.postService.findDataFireStore(this.searchId).subscribe(
+        response => {
+          // this.data = response;
+          console.log(response);
+        },
+        error => {
+          console.error('Error fetching data:', error);
+        }
+      );
+    } else {
+      console.warn('Please enter a valid ID');
+    }
   }
 
 }
